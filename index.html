@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0D1B2A">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" id="manifest-link">
+<title>GYBA Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B3A5C;
+    --navy-deep: #0D1B2A;
+    --navy-mid: #152D48;
+    --gold: #C8A951;
+    --gold-dim: rgba(200,169,81,0.12);
+    --white: #FFFFFF;
+    --gray-50: #f9fafb;
+    --gray-200: #e5e7eb;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--navy-deep);
+    color: var(--white);
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ═══ SIGN-IN ═══ */
+  .signin { min-height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; position:relative; overflow:hidden; }
+  .signin-bg { position:absolute; inset:0; background:radial-gradient(ellipse 90% 65% at 50% 38%, #0c1c3a 0%, #060e1f 45%, #000 100%); z-index:0; }
+  .star { position:absolute; border-radius:50%; background:white; animation:twinkle var(--dur) var(--delay) infinite ease-in-out; }
+  @keyframes twinkle { 0%,100%{opacity:.06} 50%{opacity:.65} }
+  .signin-body { position:relative; z-index:1; text-align:center; max-width:400px; width:100%; }
+  .signin-logo { width:180px; height:auto; margin:0 auto 28px; filter:invert(1); user-select:none; pointer-events:none; }
+  .signin-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(52px,11vw,76px); letter-spacing:.08em; line-height:.92; margin-bottom:8px; }
+  .signin-sub { font-size:13px; color:rgba(255,255,255,.4); text-transform:uppercase; letter-spacing:.18em; font-weight:500; margin-bottom:32px; }
+  .signin-values { display:flex; gap:6px; justify-content:center; margin-bottom:32px; flex-wrap:wrap; }
+  .signin-pill { padding:5px 14px; border-radius:50px; font-size:12px; font-weight:600; background:rgba(200,169,81,.1); color:var(--gold); border:1px solid rgba(200,169,81,.2); letter-spacing:.05em; }
+  .signin-form { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+  .signin-input { width:100%; padding:14px 16px; border-radius:12px; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.05); color:var(--white); font-size:16px; font-family:inherit; outline:none; transition:border-color .2s, background .2s; }
+  .signin-input::placeholder { color:rgba(255,255,255,.28); }
+  .signin-input:focus { border-color:var(--gold); background:rgba(255,255,255,.08); }
+  .signin-input.error { border-color:#f87171; }
+  .signin-code-wrap { position:relative; }
+  .signin-code-icon { position:absolute; right:14px; top:50%; transform:translateY(-50%); width:18px; height:18px; color:rgba(255,255,255,.25); pointer-events:none; }
+  .signin-btn { width:100%; padding:14px; border-radius:50px; border:none; background:var(--white); color:#000; font-size:15px; font-weight:600; font-family:inherit; cursor:pointer; transition:all .15s; box-shadow:0 8px 28px rgba(255,255,255,.08); min-height:50px; margin-top:4px; }
+  .signin-btn:hover { background:rgba(255,255,255,.92); }
+  .signin-btn:active { transform:scale(.97); }
+  .signin-btn:disabled { opacity:.35; cursor:not-allowed; transform:none; }
+  .signin-error { color:#f87171; font-size:13px; min-height:20px; margin-top:2px; }
+  .signin-hint { font-size:11px; color:rgba(255,255,255,.22); margin-top:8px; }
+  .signin-footer { margin-top:36px; font-size:10px; color:rgba(255,255,255,.12); letter-spacing:.06em; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)} }
+
+  /* ═══ HUB ═══ */
+  .hub { display:none; flex-direction:column; min-height:100dvh; background:var(--gray-50); color:#1f2937; }
+  .hub.active { display:flex; }
+  .hub-header { background:var(--navy); padding:0 16px; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,.25); }
+  .hub-header-left { display:flex; align-items:center; gap:10px; }
+  .hub-header-logo { width:32px; height:32px; border-radius:8px; object-fit:contain; background:var(--navy-deep); padding:2px; }
+  .hub-header-text { line-height:1.15; }
+  .hub-header-name { font-size:14px; font-weight:700; color:var(--gold); }
+  .hub-header-sub { font-size:10px; color:rgba(255,255,255,.6); letter-spacing:.08em; text-transform:uppercase; }
+  .hub-header-right { display:flex; align-items:center; gap:12px; }
+  .hub-user { font-size:13px; color:rgba(255,255,255,.7); font-weight:500; }
+  .hub-role-badge { font-size:10px; padding:3px 8px; border-radius:50px; font-weight:600; letter-spacing:.04em; }
+  .hub-role-badge.coach { background:rgba(200,169,81,.2); color:var(--gold); }
+  .hub-role-badge.parent { background:rgba(255,255,255,.1); color:rgba(255,255,255,.6); }
+  .hub-signout { background:none; border:1px solid rgba(255,255,255,.15); color:rgba(255,255,255,.6); font-size:12px; padding:6px 12px; border-radius:8px; cursor:pointer; font-family:inherit; font-weight:500; transition:all .15s; min-height:unset; }
+  .hub-signout:hover { border-color:rgba(255,255,255,.3); color:rgba(255,255,255,.9); }
+
+  /* Tabs */
+  .hub-tabs { display:flex; background:var(--navy-mid); border-bottom:1px solid rgba(255,255,255,.06); }
+  .hub-tab { flex:1; padding:14px 0; text-align:center; font-size:14px; font-weight:600; color:rgba(255,255,255,.5); cursor:pointer; position:relative; transition:color .2s; border:none; background:none; font-family:inherit; min-height:48px; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .hub-tab:hover { color:rgba(255,255,255,.75); }
+  .hub-tab.active { color:var(--gold); }
+  .hub-tab.active::after { content:''; position:absolute; bottom:0; left:20%; right:20%; height:3px; background:var(--gold); border-radius:3px 3px 0 0; }
+  .hub-tab.hidden-tab { display:none; }
+  .hub-tab svg { width:18px; height:18px; }
+
+  /* Single-tab mode: journal takes full width, styled slightly different */
+  .hub-tabs.single-tab { justify-content:center; }
+  .hub-tabs.single-tab .hub-tab { flex:none; padding:14px 32px; }
+
+  /* Content */
+  .hub-content { flex:1; position:relative; }
+  .hub-iframe { width:100%; height:100%; border:none; position:absolute; top:0; left:0; background:var(--gray-50); }
+  .hub-iframe.hidden { display:none; }
+  .hub-loading { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; background:var(--gray-50); z-index:5; }
+  .hub-loading.hidden { display:none; }
+  .hub-spinner { width:36px; height:36px; border:3px solid var(--gray-200); border-top-color:var(--navy); border-radius:50%; animation:spin .7s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .hub-loading-text { font-size:13px; color:var(--gray-500); }
+
+  /* Welcome banner for parents */
+  .hub-welcome { display:none; background:var(--gold-dim); border-bottom:1px solid rgba(200,169,81,.15); padding:10px 16px; font-size:13px; color:var(--navy); text-align:center; }
+  .hub-welcome.show { display:block; }
+  .hub-welcome strong { color:var(--navy); }
+
+  /* Install banner */
+  .install-banner { display:none; position:fixed; bottom:16px; left:16px; right:16px; background:var(--navy); color:var(--white); padding:14px 16px; border-radius:14px; z-index:200; box-shadow:0 8px 32px rgba(0,0,0,.4); font-size:13px; line-height:1.4; }
+  .install-banner.show { display:flex; align-items:center; gap:12px; }
+  .install-banner-text { flex:1; }
+  .install-banner-text strong { color:var(--gold); }
+  .install-banner-close { background:none; border:none; color:var(--gray-400); font-size:20px; cursor:pointer; padding:4px; min-height:unset; line-height:1; }
+
+  @media (max-width: 480px) {
+    .hub-user { display:none; }
+    .hub-header { height:50px; }
+    .hub-tab { font-size:13px; gap:6px; }
+    .hub-tab svg { width:16px; height:16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIGN-IN -->
+<div class="signin" id="signinScreen">
+  <div class="signin-bg"></div>
+  <div id="stars"></div>
+  <div class="signin-body">
+    <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663431182832/Qz3o9iDejzHraVSFMYgchi/GBYALogoStack_14336b76.png"
+         alt="GYBA" class="signin-logo" onerror="this.style.display='none'">
+    <h1 class="signin-title">GYBA HUB</h1>
+    <p class="signin-sub">Granbury Youth Baseball Association</p>
+    <div class="signin-values">
+      <span class="signin-pill">Fun</span>
+      <span class="signin-pill">Teamwork</span>
+      <span class="signin-pill">Respect</span>
+    </div>
+    <div class="signin-form">
+      <input type="text" class="signin-input" id="nameInput" placeholder="Your name" autocomplete="name">
+      <input type="text" class="signin-input" id="roleInput" placeholder="Role (e.g. Head Coach, 10U Parent)">
+      <div class="signin-code-wrap">
+        <input type="text" class="signin-input" id="codeInput" placeholder="Season access code" autocomplete="off" style="padding-right:40px;">
+        <svg class="signin-code-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <button class="signin-btn" id="signinBtn" disabled>Enter the Hub</button>
+      <div class="signin-error" id="signinError"></div>
+    </div>
+    <p class="signin-hint">Access code provided by GYBA at registration</p>
+    <p class="signin-footer">© 2026 Granbury Youth Baseball Association</p>
+  </div>
+</div>
+
+<!-- HUB -->
+<div class="hub" id="hubScreen">
+  <header class="hub-header">
+    <div class="hub-header-left">
+      <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663431182832/Qz3o9iDejzHraVSFMYgchi/GBYALogoStack_14336b76.png"
+           alt="GYBA" class="hub-header-logo" onerror="this.style.display='none'">
+      <div class="hub-header-text">
+        <div class="hub-header-name">GYBA Hub</div>
+        <div class="hub-header-sub" id="hubSeasonLabel">Spring 2026</div>
+      </div>
+    </div>
+    <div class="hub-header-right">
+      <span class="hub-user" id="hubUserName"></span>
+      <span class="hub-role-badge" id="hubRoleBadge"></span>
+      <button class="hub-signout" id="signoutBtn">Sign Out</button>
+    </div>
+  </header>
+
+  <div class="hub-welcome" id="hubWelcome"></div>
+
+  <div class="hub-tabs" id="hubTabs">
+    <button class="hub-tab active" data-tab="journal" id="tabJournal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+      Season Journal
+    </button>
+    <button class="hub-tab" data-tab="coaches" id="tabCoaches">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Coach Development
+    </button>
+  </div>
+
+  <div class="hub-content">
+    <div class="hub-loading" id="journalLoading"><div class="hub-spinner"></div><div class="hub-loading-text">Loading Season Journal...</div></div>
+    <iframe class="hub-iframe" id="journalFrame" src="about:blank" title="GYBA Season Journal" allow="clipboard-write"></iframe>
+    <div class="hub-loading hidden" id="coachesLoading"><div class="hub-spinner"></div><div class="hub-loading-text">Loading Coach Development...</div></div>
+    <iframe class="hub-iframe hidden" id="coachesFrame" src="about:blank" title="GYBA Coach Development" allow="clipboard-write"></iframe>
+  </div>
+</div>
+
+<!-- INSTALL BANNER -->
+<div class="install-banner" id="installBanner">
+  <div class="install-banner-text"><strong>Add GYBA Hub</strong> to your home screen for quick access</div>
+  <button class="install-banner-close" id="installClose">&times;</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// SEASON CONFIG — Update these values each season
+// ═══════════════════════════════════════════════════════════
+const COACH_CODE  = 'COACH26SPR';   // Full access: Journal + Coach Development
+const PARENT_CODE = 'GYBAFAM26';    // Journal only
+const SEASON_LABEL = 'Spring 2026';
+// ═══════════════════════════════════════════════════════════
+
+const JOURNAL_URL = 'https://gyba-season-journal.onrender.com';
+const COACHES_URL = 'https://gyba-coach-app.vercel.app';
+const STORAGE_KEY = 'gyba-hub-user';
+
+const $ = id => document.getElementById(id);
+
+// ═══ STARS ═══
+(function() {
+  const c = $('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = 1 + Math.random() * 1.5;
+    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--dur:${2.5+Math.random()*3}s;--delay:${Math.random()*5}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// ═══ AUTH ═══
+function getUser() {
+  try {
+    const u = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    // If codes changed since sign-in, force re-auth
+    if (!u) return null;
+    if (u.accessLevel === 'coach' && u.code !== COACH_CODE) return null;
+    if (u.accessLevel === 'parent' && u.code !== PARENT_CODE) return null;
+    return u;
+  } catch { return null; }
+}
+function setUser(u) { localStorage.setItem(STORAGE_KEY, JSON.stringify(u)); }
+function clearUser() { localStorage.removeItem(STORAGE_KEY); }
+
+function validateCode(input) {
+  const code = input.toUpperCase();
+  if (code === COACH_CODE) return { valid: true, accessLevel: 'coach', code: COACH_CODE };
+  if (code === PARENT_CODE) return { valid: true, accessLevel: 'parent', code: PARENT_CODE };
+  return { valid: false };
+}
+
+// ═══ SIGN-IN FORM ═══
+function checkFormReady() {
+  const nameOk = $('nameInput').value.trim().length >= 2;
+  const codeOk = $('codeInput').value.trim().length >= 4;
+  $('signinBtn').disabled = !(nameOk && codeOk);
+}
+
+$('nameInput').addEventListener('input', () => { $('signinError').textContent = ''; checkFormReady(); });
+$('roleInput').addEventListener('input', checkFormReady);
+$('codeInput').addEventListener('input', () => {
+  $('signinError').textContent = '';
+  $('codeInput').classList.remove('error');
+  checkFormReady();
+});
+
+$('signinBtn').addEventListener('click', () => {
+  const name = $('nameInput').value.trim();
+  const role = $('roleInput').value.trim();
+  const codeResult = validateCode($('codeInput').value.trim());
+
+  if (name.length < 2) {
+    $('signinError').textContent = 'Please enter your name';
+    return;
+  }
+  if (!codeResult.valid) {
+    $('signinError').textContent = 'Invalid access code. Check with your GYBA coordinator.';
+    $('codeInput').classList.add('error');
+    $('codeInput').style.animation = 'none';
+    $('codeInput').offsetHeight;
+    $('codeInput').style.animation = 'shake .4s ease';
+    return;
+  }
+
+  setUser({
+    name,
+    role,
+    accessLevel: codeResult.accessLevel,
+    code: codeResult.code,
+    signedInAt: Date.now()
+  });
+  showHub();
+});
+
+[$('nameInput'), $('roleInput'), $('codeInput')].forEach(el => {
+  el.addEventListener('keydown', e => { if (e.key === 'Enter' && !$('signinBtn').disabled) $('signinBtn').click(); });
+});
+
+$('signoutBtn').addEventListener('click', () => { clearUser(); showSignin(); });
+
+// ═══ SCREENS ═══
+let loaded = { journal: false, coaches: false };
+
+function showSignin() {
+  $('signinScreen').style.display = 'flex';
+  $('hubScreen').classList.remove('active');
+  $('nameInput').value = '';
+  $('roleInput').value = '';
+  $('codeInput').value = '';
+  $('signinBtn').disabled = true;
+  $('signinError').textContent = '';
+  $('journalFrame').src = 'about:blank';
+  $('coachesFrame').src = 'about:blank';
+  loaded = { journal: false, coaches: false };
+}
+
+function showHub() {
+  const user = getUser();
+  if (!user) return showSignin();
+
+  const isCoach = user.accessLevel === 'coach';
+
+  // Header
+  $('hubUserName').textContent = user.name;
+  $('hubSeasonLabel').textContent = SEASON_LABEL;
+  const badge = $('hubRoleBadge');
+  badge.textContent = isCoach ? 'Coach' : 'Parent';
+  badge.className = 'hub-role-badge ' + (isCoach ? 'coach' : 'parent');
+
+  // Welcome banner for parents
+  if (!isCoach) {
+    $('hubWelcome').innerHTML = 'Welcome, <strong>' + user.name + '</strong>! Your team\'s Season Journal is below.';
+    $('hubWelcome').classList.add('show');
+  } else {
+    $('hubWelcome').classList.remove('show');
+  }
+
+  // Tabs — hide Coach Development for parents
+  $('tabCoaches').classList.toggle('hidden-tab', !isCoach);
+  $('hubTabs').classList.toggle('single-tab', !isCoach);
+
+  // Show
+  $('signinScreen').style.display = 'none';
+  $('hubScreen').classList.add('active');
+  switchTab('journal');
+}
+
+// ═══ TABS ═══
+function switchTab(tab) {
+  const user = getUser();
+  const isCoach = user && user.accessLevel === 'coach';
+
+  // If parent tries to access coaches tab, block it
+  if (tab === 'coaches' && !isCoach) tab = 'journal';
+
+  const j = tab === 'journal';
+
+  $('tabJournal').classList.toggle('active', j);
+  $('tabCoaches').classList.toggle('active', !j);
+  $('journalFrame').classList.toggle('hidden', !j);
+  $('coachesFrame').classList.toggle('hidden', j);
+
+  if (j) {
+    $('journalLoading').classList.toggle('hidden', loaded.journal);
+    $('coachesLoading').classList.add('hidden');
+    if (!loaded.journal) {
+      $('journalFrame').src = JOURNAL_URL;
+      $('journalFrame').onload = () => { loaded.journal = true; $('journalLoading').classList.add('hidden'); };
+      setTimeout(() => { loaded.journal = true; $('journalLoading').classList.add('hidden'); }, 12000);
+    }
+  } else {
+    $('coachesLoading').classList.toggle('hidden', loaded.coaches);
+    $('journalLoading').classList.add('hidden');
+    if (!loaded.coaches) {
+      $('coachesFrame').src = COACHES_URL;
+      $('coachesFrame').onload = () => { loaded.coaches = true; $('coachesLoading').classList.add('hidden'); };
+      setTimeout(() => { loaded.coaches = true; $('coachesLoading').classList.add('hidden'); }, 12000);
+    }
+  }
+}
+
+$('tabJournal').addEventListener('click', () => switchTab('journal'));
+$('tabCoaches').addEventListener('click', () => switchTab('coaches'));
+
+// ═══ INIT ═══
+if (getUser()) { showHub(); } else { $('signinScreen').style.display = 'flex'; }
+
+// ═══ INSTALL HINT ═══
+(function() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if (isStandalone) return;
+  const d = localStorage.getItem('gyba-install-dismissed');
+  if (d && Date.now() - parseInt(d) < 7*24*60*60*1000) return;
+  if (/iPad|iPhone|iPod|Android/.test(navigator.userAgent)) {
+    setTimeout(() => $('installBanner').classList.add('show'), 3000);
+  }
+})();
+$('installClose').addEventListener('click', () => {
+  $('installBanner').classList.remove('show');
+  localStorage.setItem('gyba-install-dismissed', Date.now().toString());
+});
+
+// ═══ PWA MANIFEST ═══
+const manifest = {
+  name: 'GYBA Hub', short_name: 'GYBA',
+  description: 'Granbury Youth Baseball Association — Season Hub',
+  start_url: '.', display: 'standalone',
+  background_color: '#0D1B2A', theme_color: '#0D1B2A',
+  icons: [{ src: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431182832/Qz3o9iDejzHraVSFMYgchi/GBYALogoStack_14336b76.png', sizes: '512x512', type: 'image/png' }]
+};
+$('manifest-link').href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: 'application/json' }));
+</script>
+</body>
+</html>
