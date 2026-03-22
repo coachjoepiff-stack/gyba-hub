@@ -19,8 +19,6 @@
     --gold: #C8A951;
     --gold-dim: rgba(200,169,81,0.12);
     --white: #FFFFFF;
-    --gray-50: #f9fafb;
-    --gray-200: #e5e7eb;
     --gray-400: #9ca3af;
     --gray-500: #6b7280;
   }
@@ -62,8 +60,9 @@
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)} }
 
   /* ═══ HUB ═══ */
-  .hub { display:none; flex-direction:column; min-height:100dvh; background:var(--gray-50); color:#1f2937; }
+  .hub { display:none; flex-direction:column; min-height:100dvh; }
   .hub.active { display:flex; }
+
   .hub-header { background:var(--navy); padding:0 16px; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,.25); }
   .hub-header-left { display:flex; align-items:center; gap:10px; }
   .hub-header-logo { width:32px; height:32px; border-radius:8px; object-fit:contain; background:var(--navy-deep); padding:2px; }
@@ -75,49 +74,88 @@
   .hub-role-badge { font-size:10px; padding:3px 8px; border-radius:50px; font-weight:600; letter-spacing:.04em; }
   .hub-role-badge.coach { background:rgba(200,169,81,.2); color:var(--gold); }
   .hub-role-badge.parent { background:rgba(255,255,255,.1); color:rgba(255,255,255,.6); }
-  .hub-signout { background:none; border:1px solid rgba(255,255,255,.15); color:rgba(255,255,255,.6); font-size:12px; padding:6px 12px; border-radius:8px; cursor:pointer; font-family:inherit; font-weight:500; transition:all .15s; min-height:unset; }
+  .hub-signout { background:none; border:1px solid rgba(255,255,255,.15); color:rgba(255,255,255,.6); font-size:12px; padding:6px 12px; border-radius:8px; cursor:pointer; font-family:inherit; font-weight:500; transition:all .15s; }
   .hub-signout:hover { border-color:rgba(255,255,255,.3); color:rgba(255,255,255,.9); }
 
-  /* Tabs */
-  .hub-tabs { display:flex; background:var(--navy-mid); border-bottom:1px solid rgba(255,255,255,.06); }
-  .hub-tab { flex:1; padding:14px 0; text-align:center; font-size:14px; font-weight:600; color:rgba(255,255,255,.5); cursor:pointer; position:relative; transition:color .2s; border:none; background:none; font-family:inherit; min-height:48px; display:flex; align-items:center; justify-content:center; gap:8px; }
-  .hub-tab:hover { color:rgba(255,255,255,.75); }
-  .hub-tab.active { color:var(--gold); }
-  .hub-tab.active::after { content:''; position:absolute; bottom:0; left:20%; right:20%; height:3px; background:var(--gold); border-radius:3px 3px 0 0; }
-  .hub-tab.hidden-tab { display:none; }
-  .hub-tab svg { width:18px; height:18px; }
-
-  /* Single-tab mode: journal takes full width, styled slightly different */
-  .hub-tabs.single-tab { justify-content:center; }
-  .hub-tabs.single-tab .hub-tab { flex:none; padding:14px 32px; }
-
-  /* Content */
-  .hub-content { flex:1; position:relative; }
-  .hub-iframe { width:100%; height:100%; border:none; position:absolute; top:0; left:0; background:var(--gray-50); }
-  .hub-iframe.hidden { display:none; }
-  .hub-loading { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; background:var(--gray-50); z-index:5; }
-  .hub-loading.hidden { display:none; }
-  .hub-spinner { width:36px; height:36px; border:3px solid var(--gray-200); border-top-color:var(--navy); border-radius:50%; animation:spin .7s linear infinite; }
-  @keyframes spin { to{transform:rotate(360deg)} }
-  .hub-loading-text { font-size:13px; color:var(--gray-500); }
-
-  /* Welcome banner for parents */
-  .hub-welcome { display:none; background:var(--gold-dim); border-bottom:1px solid rgba(200,169,81,.15); padding:10px 16px; font-size:13px; color:var(--navy); text-align:center; }
+  /* Welcome banner */
+  .hub-welcome { display:none; background:var(--gold-dim); border-bottom:1px solid rgba(200,169,81,.15); padding:10px 16px; font-size:13px; color:rgba(255,255,255,.75); text-align:center; }
   .hub-welcome.show { display:block; }
-  .hub-welcome strong { color:var(--navy); }
+  .hub-welcome strong { color:var(--gold); }
+
+  /* ═══ LAUNCH PAD ═══ */
+  .hub-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 20px; gap:20px; }
+
+  .hub-greeting { text-align:center; margin-bottom:8px; }
+  .hub-greeting-name { font-family:'Bebas Neue',sans-serif; font-size:clamp(28px,7vw,42px); letter-spacing:.06em; color:var(--white); line-height:1; }
+  .hub-greeting-sub { font-size:13px; color:rgba(255,255,255,.4); margin-top:4px; letter-spacing:.06em; text-transform:uppercase; }
+
+  .hub-cards { display:flex; flex-direction:column; gap:16px; width:100%; max-width:420px; }
+
+  .hub-card {
+    display:flex; align-items:center; gap:18px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:20px;
+    padding:20px 20px;
+    cursor:pointer;
+    text-decoration:none;
+    color:inherit;
+    transition:all .18s ease;
+    position:relative;
+    overflow:hidden;
+  }
+  .hub-card::before {
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(135deg, rgba(255,255,255,.03) 0%, transparent 60%);
+    pointer-events:none;
+  }
+  .hub-card:hover { background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.18); transform:translateY(-2px); box-shadow:0 12px 40px rgba(0,0,0,.3); }
+  .hub-card:active { transform:scale(.97) translateY(0); }
+  .hub-card.gold { border-color:rgba(200,169,81,.25); }
+  .hub-card.gold:hover { border-color:rgba(200,169,81,.45); box-shadow:0 12px 40px rgba(200,169,81,.12); }
+
+  .hub-card-icon {
+    width:56px; height:56px; border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:28px; shrink:0; flex-shrink:0;
+    background:rgba(255,255,255,.06);
+  }
+  .hub-card.gold .hub-card-icon { background:rgba(200,169,81,.12); }
+
+  .hub-card-body { flex:1; min-width:0; }
+  .hub-card-title { font-size:17px; font-weight:700; color:var(--white); margin-bottom:4px; }
+  .hub-card.gold .hub-card-title { color:var(--gold); }
+  .hub-card-desc { font-size:13px; color:rgba(255,255,255,.45); line-height:1.4; }
+
+  .hub-card-arrow {
+    width:32px; height:32px; border-radius:50%;
+    background:rgba(255,255,255,.07);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    color:rgba(255,255,255,.4);
+    font-size:16px;
+    transition:all .18s;
+  }
+  .hub-card:hover .hub-card-arrow { background:rgba(255,255,255,.14); color:rgba(255,255,255,.85); transform:translateX(2px); }
+  .hub-card.gold:hover .hub-card-arrow { background:rgba(200,169,81,.2); color:var(--gold); }
+
+  .hub-card.hidden-card { display:none; }
+
+  .hub-footer { font-size:11px; color:rgba(255,255,255,.12); letter-spacing:.06em; margin-top:8px; }
 
   /* Install banner */
   .install-banner { display:none; position:fixed; bottom:16px; left:16px; right:16px; background:var(--navy); color:var(--white); padding:14px 16px; border-radius:14px; z-index:200; box-shadow:0 8px 32px rgba(0,0,0,.4); font-size:13px; line-height:1.4; }
   .install-banner.show { display:flex; align-items:center; gap:12px; }
   .install-banner-text { flex:1; }
   .install-banner-text strong { color:var(--gold); }
-  .install-banner-close { background:none; border:none; color:var(--gray-400); font-size:20px; cursor:pointer; padding:4px; min-height:unset; line-height:1; }
+  .install-banner-close { background:none; border:none; color:var(--gray-400); font-size:20px; cursor:pointer; padding:4px; line-height:1; }
 
   @media (max-width: 480px) {
     .hub-user { display:none; }
     .hub-header { height:50px; }
-    .hub-tab { font-size:13px; gap:6px; }
-    .hub-tab svg { width:16px; height:16px; }
+    .hub-card-icon { width:48px; height:48px; font-size:24px; border-radius:14px; }
+    .hub-card-title { font-size:16px; }
   }
 </style>
 </head>
@@ -172,22 +210,35 @@
 
   <div class="hub-welcome" id="hubWelcome"></div>
 
-  <div class="hub-tabs" id="hubTabs">
-    <button class="hub-tab active" data-tab="journal" id="tabJournal">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-      Season Journal
-    </button>
-    <button class="hub-tab" data-tab="coaches" id="tabCoaches">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      Coach Development
-    </button>
-  </div>
+  <div class="hub-body">
+    <div class="hub-greeting">
+      <div class="hub-greeting-name" id="hubGreetingName"></div>
+      <div class="hub-greeting-sub">Spring 2026 · Choose your app</div>
+    </div>
 
-  <div class="hub-content">
-    <div class="hub-loading" id="journalLoading"><div class="hub-spinner"></div><div class="hub-loading-text">Loading Season Journal...</div></div>
-    <iframe class="hub-iframe" id="journalFrame" src="about:blank" title="GYBA Season Journal" allow="clipboard-write"></iframe>
-    <div class="hub-loading hidden" id="coachesLoading"><div class="hub-spinner"></div><div class="hub-loading-text">Loading Coach Development...</div></div>
-    <iframe class="hub-iframe hidden" id="coachesFrame" src="about:blank" title="GYBA Coach Development" allow="clipboard-write"></iframe>
+    <div class="hub-cards">
+      <!-- Season Journal — always visible -->
+      <a class="hub-card gold" id="cardJournal" href="https://gyba-season-journal.up.railway.app" target="_blank" rel="noopener">
+        <div class="hub-card-icon">📓</div>
+        <div class="hub-card-body">
+          <div class="hub-card-title">Season Journal</div>
+          <div class="hub-card-desc">Team roster, lineup builder, game day mode, media, communications &amp; more</div>
+        </div>
+        <div class="hub-card-arrow">→</div>
+      </a>
+
+      <!-- Coach Development — coaches only -->
+      <a class="hub-card hidden-card" id="cardCoaches" href="https://gyba-coach-app.vercel.app" target="_blank" rel="noopener">
+        <div class="hub-card-icon">📋</div>
+        <div class="hub-card-body">
+          <div class="hub-card-title">Coach Development</div>
+          <div class="hub-card-desc">Drills library, practice plans, coaching resources &amp; certifications</div>
+        </div>
+        <div class="hub-card-arrow">→</div>
+      </a>
+    </div>
+
+    <p class="hub-footer">© 2026 Granbury Youth Baseball Association</p>
   </div>
 </div>
 
@@ -201,15 +252,12 @@
 // ═══════════════════════════════════════════════════════════
 // SEASON CONFIG — Update these values each season
 // ═══════════════════════════════════════════════════════════
-const COACH_CODE  = 'COACH26SPR';   // Full access: Journal + Coach Development
-const PARENT_CODE = 'GYBAFAM26';    // Journal only
+const COACH_CODE   = 'COACH26SPR';  // Full access: Journal + Coach Development
+const PARENT_CODE  = 'GYBAFAM26';   // Journal only
 const SEASON_LABEL = 'Spring 2026';
 // ═══════════════════════════════════════════════════════════
 
-const JOURNAL_URL = 'https://gyba-season-journal.onrender.com';
-const COACHES_URL = 'https://gyba-coach-app.vercel.app';
 const STORAGE_KEY = 'gyba-hub-user';
-
 const $ = id => document.getElementById(id);
 
 // ═══ STARS ═══
@@ -228,9 +276,8 @@ const $ = id => document.getElementById(id);
 function getUser() {
   try {
     const u = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    // If codes changed since sign-in, force re-auth
     if (!u) return null;
-    if (u.accessLevel === 'coach' && u.code !== COACH_CODE) return null;
+    if (u.accessLevel === 'coach'  && u.code !== COACH_CODE)  return null;
     if (u.accessLevel === 'parent' && u.code !== PARENT_CODE) return null;
     return u;
   } catch { return null; }
@@ -240,9 +287,9 @@ function clearUser() { localStorage.removeItem(STORAGE_KEY); }
 
 function validateCode(input) {
   const code = input.toUpperCase();
-  if (code === COACH_CODE) return { valid: true, accessLevel: 'coach', code: COACH_CODE };
-  if (code === PARENT_CODE) return { valid: true, accessLevel: 'parent', code: PARENT_CODE };
-  return { valid: false };
+  if (code === COACH_CODE)  return { valid:true, accessLevel:'coach',  code:COACH_CODE };
+  if (code === PARENT_CODE) return { valid:true, accessLevel:'parent', code:PARENT_CODE };
+  return { valid:false };
 }
 
 // ═══ SIGN-IN FORM ═══
@@ -265,10 +312,7 @@ $('signinBtn').addEventListener('click', () => {
   const role = $('roleInput').value.trim();
   const codeResult = validateCode($('codeInput').value.trim());
 
-  if (name.length < 2) {
-    $('signinError').textContent = 'Please enter your name';
-    return;
-  }
+  if (name.length < 2) { $('signinError').textContent = 'Please enter your name'; return; }
   if (!codeResult.valid) {
     $('signinError').textContent = 'Invalid access code. Check with your GYBA coordinator.';
     $('codeInput').classList.add('error');
@@ -278,13 +322,7 @@ $('signinBtn').addEventListener('click', () => {
     return;
   }
 
-  setUser({
-    name,
-    role,
-    accessLevel: codeResult.accessLevel,
-    code: codeResult.code,
-    signedInAt: Date.now()
-  });
+  setUser({ name, role, accessLevel:codeResult.accessLevel, code:codeResult.code, signedInAt:Date.now() });
   showHub();
 });
 
@@ -295,8 +333,6 @@ $('signinBtn').addEventListener('click', () => {
 $('signoutBtn').addEventListener('click', () => { clearUser(); showSignin(); });
 
 // ═══ SCREENS ═══
-let loaded = { journal: false, coaches: false };
-
 function showSignin() {
   $('signinScreen').style.display = 'flex';
   $('hubScreen').classList.remove('active');
@@ -305,9 +341,6 @@ function showSignin() {
   $('codeInput').value = '';
   $('signinBtn').disabled = true;
   $('signinError').textContent = '';
-  $('journalFrame').src = 'about:blank';
-  $('coachesFrame').src = 'about:blank';
-  loaded = { journal: false, coaches: false };
 }
 
 function showHub() {
@@ -315,68 +348,32 @@ function showHub() {
   if (!user) return showSignin();
 
   const isCoach = user.accessLevel === 'coach';
+  const firstName = user.name.split(' ')[0];
 
   // Header
   $('hubUserName').textContent = user.name;
   $('hubSeasonLabel').textContent = SEASON_LABEL;
   const badge = $('hubRoleBadge');
-  badge.textContent = isCoach ? 'Coach' : 'Parent';
+  badge.textContent = isCoach ? 'Coach' : 'Family';
   badge.className = 'hub-role-badge ' + (isCoach ? 'coach' : 'parent');
 
-  // Welcome banner for parents
+  // Greeting
+  $('hubGreetingName').textContent = 'Hey, ' + firstName + '!';
+
+  // Welcome banner for families
   if (!isCoach) {
-    $('hubWelcome').innerHTML = 'Welcome, <strong>' + user.name + '</strong>! Your team\'s Season Journal is below.';
+    $('hubWelcome').innerHTML = 'Welcome, <strong>' + user.name + '</strong>! Your team\'s Season Journal is ready.';
     $('hubWelcome').classList.add('show');
   } else {
     $('hubWelcome').classList.remove('show');
   }
 
-  // Tabs — hide Coach Development for parents
-  $('tabCoaches').classList.toggle('hidden-tab', !isCoach);
-  $('hubTabs').classList.toggle('single-tab', !isCoach);
+  // Show Coach Development card only for coaches
+  $('cardCoaches').classList.toggle('hidden-card', !isCoach);
 
-  // Show
   $('signinScreen').style.display = 'none';
   $('hubScreen').classList.add('active');
-  switchTab('journal');
 }
-
-// ═══ TABS ═══
-function switchTab(tab) {
-  const user = getUser();
-  const isCoach = user && user.accessLevel === 'coach';
-
-  // If parent tries to access coaches tab, block it
-  if (tab === 'coaches' && !isCoach) tab = 'journal';
-
-  const j = tab === 'journal';
-
-  $('tabJournal').classList.toggle('active', j);
-  $('tabCoaches').classList.toggle('active', !j);
-  $('journalFrame').classList.toggle('hidden', !j);
-  $('coachesFrame').classList.toggle('hidden', j);
-
-  if (j) {
-    $('journalLoading').classList.toggle('hidden', loaded.journal);
-    $('coachesLoading').classList.add('hidden');
-    if (!loaded.journal) {
-      $('journalFrame').src = JOURNAL_URL;
-      $('journalFrame').onload = () => { loaded.journal = true; $('journalLoading').classList.add('hidden'); };
-      setTimeout(() => { loaded.journal = true; $('journalLoading').classList.add('hidden'); }, 12000);
-    }
-  } else {
-    $('coachesLoading').classList.toggle('hidden', loaded.coaches);
-    $('journalLoading').classList.add('hidden');
-    if (!loaded.coaches) {
-      $('coachesFrame').src = COACHES_URL;
-      $('coachesFrame').onload = () => { loaded.coaches = true; $('coachesLoading').classList.add('hidden'); };
-      setTimeout(() => { loaded.coaches = true; $('coachesLoading').classList.add('hidden'); }, 12000);
-    }
-  }
-}
-
-$('tabJournal').addEventListener('click', () => switchTab('journal'));
-$('tabCoaches').addEventListener('click', () => switchTab('coaches'));
 
 // ═══ INIT ═══
 if (getUser()) { showHub(); } else { $('signinScreen').style.display = 'flex'; }
@@ -398,13 +395,13 @@ $('installClose').addEventListener('click', () => {
 
 // ═══ PWA MANIFEST ═══
 const manifest = {
-  name: 'GYBA Hub', short_name: 'GYBA',
-  description: 'Granbury Youth Baseball Association — Season Hub',
-  start_url: '.', display: 'standalone',
-  background_color: '#0D1B2A', theme_color: '#0D1B2A',
-  icons: [{ src: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431182832/Qz3o9iDejzHraVSFMYgchi/GBYALogoStack_14336b76.png', sizes: '512x512', type: 'image/png' }]
+  name:'GYBA Hub', short_name:'GYBA',
+  description:'Granbury Youth Baseball Association — Season Hub',
+  start_url:'.', display:'standalone',
+  background_color:'#0D1B2A', theme_color:'#0D1B2A',
+  icons:[{ src:'https://d2xsxph8kpxj0f.cloudfront.net/310519663431182832/Qz3o9iDejzHraVSFMYgchi/GBYALogoStack_14336b76.png', sizes:'512x512', type:'image/png' }]
 };
-$('manifest-link').href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: 'application/json' }));
+$('manifest-link').href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type:'application/json' }));
 </script>
 </body>
 </html>
